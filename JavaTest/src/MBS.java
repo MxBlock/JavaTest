@@ -1,17 +1,7 @@
 import java.awt.Color;
 
 public class MBS {
-
-	float RE_START, RE_END, IM_START, IM_END, RE_RANGE, IM_RANGE = 0;
-	int SCREEN_WIDTH = 600;
-	int SCREEN_HEIGHT = 400;
-	int[] mousePosPixel = { 0, 0 };
-	float ZOOM_FACTOR = 0.5f;
-	int MAX_ITER = 100;
-	Color[][] pixels = new Color[SCREEN_WIDTH][SCREEN_HEIGHT];
-
-	private void computeNewRange() {
-
+	public static void computeNewRange(float RE_START, float RE_END, float IM_START, float IM_END, float RE_RANGE, float IM_RANGE, int SCREEN_WIDTH, int SCREEN_HEIGHT, float ZOOM_FACTOR, int[] mousePosPixel) {
 		// New middle of screen is mousePosScreen | convertP2G(mousePosition +
 		// HalfNewScreen)
 		RE_END = RE_START + ((mousePosPixel[0] + (SCREEN_WIDTH * ZOOM_FACTOR) / 2) / SCREEN_WIDTH) * RE_RANGE;
@@ -23,16 +13,14 @@ public class MBS {
 		IM_RANGE = IM_END - IM_START;
 	}
 
-	private void computeMBS() {
+	public static void computeMBS(float RE_START, float IM_START, float RE_RANGE, float IM_RANGE, int SCREEN_WIDTH, int SCREEN_HEIGHT,int MAX_ITER,  Color[][] pixels) {
 
 		for (int x = 0; x < SCREEN_WIDTH; x++) {
 			for (int y = 0; y < SCREEN_HEIGHT; y++) {
-				// for x,y in product(range(0, SCREEN_WIDTH),range(0, SCREEN_HEIGHT)){
 				// Convert pixel coordinate to complex number
-				// float c = complex((RE_START + (x / SCREEN_WIDTH) * RE_RANGE), (IM_START + (y
-				// / SCREEN_HEIGHT) * IM_RANGE));
+				Complex c = new Complex((RE_START + (x / SCREEN_WIDTH) * RE_RANGE), (IM_START + (y / SCREEN_HEIGHT) * IM_RANGE));
 				int color = 0;
-				int z = 0;
+				Complex z = 0;
 				int[] col = { 0, 0, 0 };
 				for (int n = 0; n < MAX_ITER; n++) {
 					if (Math.abs(z) > 2) {
@@ -57,7 +45,9 @@ public class MBS {
 						 * col[1] = 255; else: col[1] = 255; col[2] = 255; break;
 						 */
 					}
-					// z = z*z + c;
+					
+					//z = z*z + c;
+					z = ComplexAdd(ComplexMul(z,z),c);
 				}
 				pixels[x][y] = new Color(color, 0, 0);
 			}

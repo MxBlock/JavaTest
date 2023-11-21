@@ -9,27 +9,29 @@ public class Pane extends JPanel implements ActionListener {
 	private Color[] colors = { Color.GRAY, Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.YELLOW };
 	private ArrayList<Rectangle> shapes = new ArrayList<Rectangle>();
 	private ArrayList<Color> shapeColors = new ArrayList<Color>();
-	// private Timer timer;
 	private Random random;
 
-	private final int SCREEN_WIDTH = 600;
-	private final int SCREEN_HEIGHT = 400;
+	final int SCREEN_WIDTH = 600;
+	final int SCREEN_HEIGHT = 400;
 	int MAX_ITERATION = 255;
-	float GRAPHX_START = -2.00f;
-	float GRAPHX_END = 0.47f;
-	float GRAPHY_START = -1.12f;
-	float GRAPHY_END = 1.12f;
-	float GRAPHX_RANGE = GRAPHX_END - GRAPHX_START;
-	float GRAPHY_RANGE = GRAPHY_END - GRAPHY_START;
+	float RE_START = -2.00f;
+	float RE_END = 0.47f;
+	float IM_START = -1.12f;
+	float IM_END = 1.12f;
+	float RE_RANGE = RE_END - RE_START;
+	float IM_RANGE = IM_END - IM_START;
 	Color[][] pixels = new Color[SCREEN_WIDTH][SCREEN_HEIGHT];
+	
+	int[] mousePosPixel = { 0, 0 };
+	float ZOOM_FACTOR = 0.5f;
+	int MAX_ITER = 100;
+	
 
 	Pane() {
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.BLACK);
 		this.setFocusable(true);
 		this.setLayout(null);
-		// timer = new Timer(500, this);
-		// timer.start();
 		random = new Random();
 	}
 
@@ -37,36 +39,12 @@ public class Pane extends JPanel implements ActionListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
-		MBS();
-		for (int x = 0; x <= SCREEN_WIDTH - 1; x++) {
-			for (int y = 0; y <= SCREEN_HEIGHT - 1; y++) {
+		MBS.computeNewRange(RE_START, RE_END, IM_START, IM_END, RE_RANGE, IM_RANGE, SCREEN_WIDTH, SCREEN_HEIGHT, ZOOM_FACTOR, mousePosPixel);
+		MBS.computeMBS(RE_START, IM_START, RE_RANGE, IM_RANGE, SCREEN_WIDTH, SCREEN_HEIGHT, MAX_ITER, pixels);
+		for (int x = 0; x < SCREEN_WIDTH; x++) {
+			for (int y = 0; y < SCREEN_HEIGHT; y++) {
 				g2D.setColor(pixels[x][y]);
 				g2D.drawLine(x, y, x, y);
-			}
-		}
-	}
-
-	/*
-	 * @Override public void actionPerformed(ActionEvent event) { MBS(); repaint();
-	 * }
-	 */
-
-	private void MBS() {
-		for (int i = 0; i <= SCREEN_WIDTH - 1; i++) {
-			for (int j = 0; j <= SCREEN_HEIGHT - 1; j++) {
-				float x = 0;
-				float y = 0;
-				int iteration = 0;
-				for (int n = 0; n <= MAX_ITERATION; n++) {
-					if (x * x + y * y <= 2 * 2) {
-						break;
-					}
-					float xtemp = x * x - y * y + GRAPHX_START;
-					y = 2 * x * x + GRAPHY_START;
-					x = xtemp;
-					iteration++;
-				}
-				pixels[i][j] = new Color(iteration, 0, 0);
 			}
 		}
 	}
@@ -74,6 +52,6 @@ public class Pane extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Automatisch generierter Methodenstub
-
+		
 	}
 }
