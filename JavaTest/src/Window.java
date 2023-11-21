@@ -5,9 +5,9 @@ public class Window extends JFrame {
 		this.setTitle("Fat Square");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
 		this.add(new Pane());
 		this.pack();
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 	}
 }

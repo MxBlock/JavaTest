@@ -6,12 +6,15 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Pane extends JPanel implements ActionListener {
-
+	private MBS m;
+	
+	
 	Pane() {
 		this.setPreferredSize(new Dimension(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT));
 		this.setBackground(Color.BLACK);
 		this.setFocusable(true);
 		this.setLayout(null);
+		m = new MBS();
 	}
 
 	@Override
@@ -22,7 +25,7 @@ public class Pane extends JPanel implements ActionListener {
 		// SCREEN_WIDTH, SCREEN_HEIGHT, ZOOM_FACTOR, mousePosPixel);
 		// MBS.computeMBS(RE_START, IM_START, RE_RANGE, IM_RANGE, SCREEN_WIDTH,
 		// SCREEN_HEIGHT, MAX_ITERATION, pixels);
-		MBS m = new MBS();
+		
 		m.computeMBS();
 		// paint pixels
 		for (int x = 0; x < Main.SCREEN_WIDTH; x++) {
