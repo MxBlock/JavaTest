@@ -2,10 +2,14 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Pane extends JPanel implements ActionListener {
+@SuppressWarnings("serial")
+public class Pane extends JPanel implements ActionListener, MouseListener {
 	private MBS m;
 	
 	
@@ -14,7 +18,8 @@ public class Pane extends JPanel implements ActionListener {
 		this.setBackground(Color.BLACK);
 		this.setFocusable(true);
 		this.setLayout(null);
-		m = new MBS();
+		this.addMouseListener(this);
+		m = new MBS(-2, 1, -1, 1, 1500, 0.5);
 	}
 
 	@Override
@@ -40,5 +45,38 @@ public class Pane extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Automatisch generierter Methodenstub
 
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		m.mousePosPixel[0] = e.getX();
+		m.mousePosPixel[1] = e.getY();
+		System.out.println(m.mousePosPixel[0] + "\t" +  m.mousePosPixel[1]);
+		m.computeNewRange();
+		repaint();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
