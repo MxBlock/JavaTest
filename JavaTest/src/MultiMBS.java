@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.util.Random;
 
-public class MBS {
+public class MultiMBS extends Thread {
 	double RE_START;
 	double RE_END;
 	double IM_START;
@@ -11,10 +11,13 @@ public class MBS {
 	int MAX_ITERATION;
 	double ZOOM_FACTOR;
 
-	Color[][] pixels = new Color[Main.SCREEN_WIDTH][Main.SCREEN_HEIGHT];
+	int pixelsLength = Main.SCREEN_WIDTH * Main.SCREEN_HEIGHT;
+	Color[] pixels = new Color[pixelsLength];
 	int[] mousePosPixel = { 0, 0 };
+	int PROCESS_COUNT = 2;
 
-	public MBS(double RE_START, double RE_END, double IM_START, double IM_END, int MAX_ITERATION, double ZOOM_FACTOR) {
+	public MultiMBS(double RE_START, double RE_END, double IM_START, double IM_END, int MAX_ITERATION,
+			double ZOOM_FACTOR) {
 		this.RE_START = RE_START;
 		this.RE_END = RE_END;
 		this.IM_START = IM_START;
@@ -24,23 +27,12 @@ public class MBS {
 		this.RE_RANGE = RE_END - RE_START;
 		this.IM_RANGE = IM_END - IM_START;
 	}
-
-	public void computeNewRange() {
-		// New middle of screen is mousePosScreen | convertP2G(mousePosition +
-		// HalfNewScreen)
-		RE_END = RE_START + ((mousePosPixel[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH) * RE_RANGE;
-		RE_START = RE_START
-				+ ((mousePosPixel[0] - (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH) * RE_RANGE;
-		IM_END = IM_START
-				+ ((mousePosPixel[1] + (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
-		IM_START = IM_START
-				+ ((mousePosPixel[1] - (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
-		// Compute new ranges
-		RE_RANGE = RE_END - RE_START;
-		IM_RANGE = IM_END - IM_START;
+	
+	public void initMultiMBS() {
+		
 	}
 
-	public void computeMBS() {
+	public void computeMBS(int process) {
 		double c_re = 0;
 		double c_im = 0;
 		double z_re = 0;
@@ -48,9 +40,14 @@ public class MBS {
 		double z_abs = 0;
 		int[] col = { 0, 0, 0 };
 		double original_z_re = 0;
+		int index = 0;
+		
+		int range_x = Main.SCREEN_HEIGHT; // PROCESS_COUNT
+		int min_x = range_x * process;
+		int max_x = range_x * (process + 1);
 
 		for (int x = 0; x < Main.SCREEN_WIDTH; x++) {
-			for (int y = 0; y < Main.SCREEN_HEIGHT; y++) {
+			for (int y = min_x; y < max_x; y++) {
 				// Convert pixel coordinate to graph coordinate (x=re / y=im)
 				c_re = (RE_START + (((double) x / (double) Main.SCREEN_WIDTH) * RE_RANGE));
 				c_im = (IM_START + (((double) y / (double) Main.SCREEN_HEIGHT) * IM_RANGE));
@@ -83,19 +80,35 @@ public class MBS {
 					z_re = ((z_re * z_re) - (z_im * z_im)) + c_re;
 					z_im = (2 * original_z_re * z_im) + c_im;
 				}
-				pixels[x][y] = new Color(col[0], col[1], col[2]);
+				// Calculate the index in the 1D array
+				index = (int)(x * Main.SCREEN_HEIGHT + y);
+				// Update the shared pixel values
+				pixels[index] = new Color(col[0], col[1], col[2]);
 			}
 		}
+	}
+
+	public void computeNewRange() {
+		// New middle of screen is mousePosScreen | convertP2G(mousePosition +
+		// HalfNewScreen)
+		RE_END = RE_START + ((mousePosPixel[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH) * RE_RANGE;
+		RE_START = RE_START
+				+ ((mousePosPixel[0] - (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH) * RE_RANGE;
+		IM_END = IM_START
+				+ ((mousePosPixel[1] + (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
+		IM_START = IM_START
+				+ ((mousePosPixel[1] - (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
+		// Compute new ranges
+		RE_RANGE = RE_END - RE_START;
+		IM_RANGE = IM_END - IM_START;
 	}
 
 	public void fillRandom() {
 		Random rnd = new Random();
 		int[] col = new int[3];
 
-		for (int x = 0; x < Main.SCREEN_WIDTH; x++) {
-			for (int y = 0; y < Main.SCREEN_HEIGHT; y++) {
-				pixels[x][y] = new Color(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
-			}
+		for (int x = 0; x < pixelsLength; x++) {
+			pixels[x] = new Color(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
 		}
 	}
 }
