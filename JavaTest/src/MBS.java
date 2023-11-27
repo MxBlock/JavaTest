@@ -64,15 +64,13 @@ public class MBS {
 				for (int n = 0; n < MAX_ITERATION; n++) {
 					z_abs = Math.sqrt(z_re * z_re + z_im * z_im);
 					if (z_abs > 2) {
-						/*
-						 * double normalizedN = (double) (n - 3) / ((double) MAX_ITERATION - 3); //
-						 * Mappe den normalisierten Wert auf den RGB-Bereich [0, 255] // Stelle sicher,
-						 * dass die RGB-Werte im gültigen Bereich liegen col[0] = Math.max(0,
-						 * Math.min(255, (int) (normalizedN * 255))); col[1] = Math.max(0, Math.min(255,
-						 * (int) (normalizedN * 255))); col[2] = Math.max(0, Math.min(255, (int)
-						 * (normalizedN * 255)));
-						 */
-
+						 double normalizedN = (double) (n) / ((double) MAX_ITERATION);
+						 // Mappe den normalisierten Wert auf den RGB-Bereich [0, 255]
+						 // Stelle sicher,dass die RGB-Werte im gültigen Bereich liegen
+						 col[0] = (int) (normalizedN * 255);
+						 col[1] = n>255?(int) (normalizedN * 255) : 0;
+						 col[2] = n>510?(int) (normalizedN * 255) : 0;
+						 /*
 						// Full Color
 						if (n <= 255) {
 							col[0] = n;
@@ -85,7 +83,7 @@ public class MBS {
 								col[2] = 255;
 							}
 						}
-
+*/
 						// col[0] = 255 - (n * 255 / MAX_ITERATION);
 						break;
 					}
