@@ -9,10 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
-public class Pane extends JPanel implements ActionListener, MouseListener {
+public class Pane extends JPanel implements MouseListener {
 	private MBS m;
-	
-	
+
 	Pane() {
 		this.setPreferredSize(new Dimension(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT));
 		this.setBackground(Color.BLACK);
@@ -26,11 +25,7 @@ public class Pane extends JPanel implements ActionListener, MouseListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
-		// MBS.computeNewRange(RE_START, RE_END, IM_START, IM_END, RE_RANGE, IM_RANGE,
-		// SCREEN_WIDTH, SCREEN_HEIGHT, ZOOM_FACTOR, mousePosPixel);
-		// MBS.computeMBS(RE_START, IM_START, RE_RANGE, IM_RANGE, SCREEN_WIDTH,
-		// SCREEN_HEIGHT, MAX_ITERATION, pixels);
-		
+
 		m.computeMBS();
 		// paint pixels
 		for (int x = 0; x < Main.SCREEN_WIDTH; x++) {
@@ -42,41 +37,27 @@ public class Pane extends JPanel implements ActionListener, MouseListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Automatisch generierter Methodenstub
-
-	}
-	
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		m.mousePosPixel[0] = e.getX();
 		m.mousePosPixel[1] = e.getY();
-		System.out.println(m.mousePosPixel[0] + "\t" +  m.mousePosPixel[1]);
+		System.out.println(m.mousePosPixel[0] + "\t" + m.mousePosPixel[1]);
 		m.computeNewRange();
 		repaint();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }
