@@ -76,7 +76,7 @@ public class MBS {
 							col[0] = n;
 						} else {
 							col[0] = 255;
-							if (n <= 510) {
+							if (n <= 510) {.
 								col[1] = 255;
 							} else {
 								col[1] = 255;
