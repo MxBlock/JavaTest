@@ -11,10 +11,11 @@ public class MBS {
 	int MAX_ITERATION;
 	double ZOOM_FACTOR;
 
-	Color[][] pixels = new Color[Main.SCREEN_WIDTH][Main.SCREEN_HEIGHT];
+	Color[] pixels = new Color[Main.SCREEN_LENGTH];
 	int[] mousePosPixel = { 0, 0 };
 
-	public MBS(double RE_START, double RE_END, double IM_START, double IM_END, int MAX_ITERATION, double ZOOM_FACTOR) {
+	public MBS(double RE_START, double RE_END, double IM_START, double IM_END, int MAX_ITERATION,
+			double ZOOM_FACTOR) {
 		this.RE_START = RE_START;
 		this.RE_END = RE_END;
 		this.IM_START = IM_START;
@@ -48,54 +49,59 @@ public class MBS {
 		double z_abs = 0;
 		int[] col = { 0, 0, 0 };
 		double original_z_re = 0;
+		int x = 0;
+		int y = 0;
 
-		for (int x = 0; x < Main.SCREEN_WIDTH; x++) {
-			for (int y = 0; y < Main.SCREEN_HEIGHT; y++) {
-				// Convert pixel coordinate to graph coordinate (x=re / y=im)
-				c_re = (RE_START + (((double) x / (double) Main.SCREEN_WIDTH) * RE_RANGE));
-				c_im = (IM_START + (((double) y / (double) Main.SCREEN_HEIGHT) * IM_RANGE));
-				z_re = 0;
-				z_im = 0;
-				col[0] = 0;
-				col[1] = 0;
-				col[2] = 0;
-
-				// loop through z and look if it diverges or converges
-				for (int n = 0; n < MAX_ITERATION; n++) {
-					z_abs = Math.sqrt(z_re * z_re + z_im * z_im);
-					if (z_abs > 2) {
-						double normalizedN = (double) (n) / ((double) MAX_ITERATION);
-						// Mappe den normalisierten Wert auf den RGB-Bereich [0, 255]
-						// Stelle sicher,dass die RGB-Werte im gültigen Bereich liegen
-						col[0] = (int) (normalizedN * 255);
-						col[1] = n > 255 ? (int) (normalizedN * 255) : 0;
-						col[2] = n > 510 ? (int) (normalizedN * 255) : 0;
-						/*
-						 * // Full Color if (n <= 255) { col[0] = n; } else { col[0] = 255; if (n <=
-						 * 510) {. col[1] = 255; } else { col[1] = 255; col[2] = 255; } }
-						 */
-						// col[0] = 255 - (n * 255 / MAX_ITERATION);
-						break;
-					}
-					// z = z*z + c;
-					// Save the original values for the next iteration
-					original_z_re = z_re;
-					z_re = ((z_re * z_re) - (z_im * z_im)) + c_re;
-					z_im = (2 * original_z_re * z_im) + c_im;
-				}
-				pixels[x][y] = new Color(col[0], col[1], col[2]);
+		for (int i = 0; i < (Main.SCREEN_LENGTH); i++) {
+			x = i % Main.SCREEN_WIDTH;
+			if(x == 0) {
+				y++;
 			}
+			// Convert pixel coordinate to graph coordinate (x=re / y=im)
+			c_re = (RE_START + (((double) x / (double) Main.SCREEN_WIDTH) * RE_RANGE));
+			c_im = (IM_START + (((double) y / (double) Main.SCREEN_HEIGHT) * IM_RANGE));
+			z_re = 0;
+			z_im = 0;
+			col[0] = 0;
+			col[1] = 0;
+			col[2] = 0;
+
+			// loop through z and look if it diverges or converges
+			for (int n = 0; n < MAX_ITERATION; n++) {
+				z_abs = Math.sqrt(z_re * z_re + z_im * z_im);
+				if (z_abs > 2) {
+					
+					// Full Color
+					if (n <= 255) {
+						col[0] = n;
+					} else {
+						col[0] = 255;
+						if (n <= 510) {
+							col[1] = 255;
+						} else {
+							col[1] = 255;
+							col[2] = 255;
+						}
+					}
+					//col[0] = 255 - (n * 255 / MAX_ITERATION);
+					break;
+				}
+				// z = z*z + c;
+				// Save the original values for the next iteration
+				original_z_re = z_re;
+				z_re = ((z_re * z_re) - (z_im * z_im)) + c_re;
+				z_im = (2 * original_z_re * z_im) + c_im;
+			}
+			// Update the pixel values
+			pixels[i] = new Color(col[0], col[1], col[2]);
 		}
+
 	}
 
 	public void fillRandom() {
 		Random rnd = new Random();
-		int[] col = new int[3];
-
-		for (int x = 0; x < Main.SCREEN_WIDTH; x++) {
-			for (int y = 0; y < Main.SCREEN_HEIGHT; y++) {
-				pixels[x][y] = new Color(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
-			}
+		for (int i = 0; i < Main.SCREEN_LENGTH; i++) {
+			pixels[i] = new Color(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255));
 		}
 	}
 }

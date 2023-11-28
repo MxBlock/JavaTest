@@ -10,7 +10,9 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class Pane extends JPanel implements MouseListener {
-	private MultiMBS m;
+	private MBS m = new MBS(-2, 1, -1, 1, 765, 0.5);
+	//private Fraktall m = new Fraktall(-2, 1, -1, 1, 1000, 0.5);
+	//private paintTest m = new paintTest();
 
 	Pane() {
 		this.setPreferredSize(new Dimension(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT));
@@ -18,27 +20,31 @@ public class Pane extends JPanel implements MouseListener {
 		this.setFocusable(true);
 		this.setLayout(null);
 		this.addMouseListener(this);
-		m = new MultiMBS(-2, 1, -1, 1, 1500, 0.5);
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
-
-		m.initMultiMBS();
-		m.computeMBS(1);
-		paintCanvas(g2D, m);
+		
+		m.computeMBS();
+		//m.fillRandom();
+		paintCanvas(g2D, m.pixels);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(e.isShiftDown()) {
+			System.exit(0);
+		}
+		
 		m.mousePosPixel[0] = e.getX();
 		m.mousePosPixel[1] = e.getY();
 		System.out.println(m.mousePosPixel[0] + "\t" + m.mousePosPixel[1]);
 		m.computeNewRange();
 		repaint();
 	}
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 	}
@@ -55,26 +61,27 @@ public class Pane extends JPanel implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 	}
 
-	public void paintCanvas(Graphics2D g2D, MBS m) {
+	public void paintCanvas(Graphics2D g2D, Color[][] pixels) {
 		// paint pixels
 		for (int x = 0; x < Main.SCREEN_WIDTH; x++) {
 			for (int y = 0; y < Main.SCREEN_HEIGHT; y++) {
-				g2D.setColor(m.pixels[x][y]);
+				g2D.setColor(pixels[x][y]);
 				g2D.drawLine(x, y, x, y);
 			}
 		}
 	}
 
-	public void paintCanvas(Graphics2D g2D, MultiMBS m) {
+	public void paintCanvas(Graphics2D g2D, Color[] pixels) {
 		// paint pixels
 		int x = 0;
 		int y = 0;
-		for (int i = 0; i < (Main.SCREEN_WIDTH * Main.SCREEN_HEIGHT); i++) {
+		for (int i = 0; i < (Main.SCREEN_LENGTH); i++) {
+			
 			x = i % Main.SCREEN_WIDTH;
-			if (x == 0) {
+			if(x == 0) {
 				y++;
 			}
-			g2D.setColor(m.pixels[x]);
+			g2D.setColor(pixels[i]);
 			g2D.drawLine(x, y, x, y);
 		}
 	}

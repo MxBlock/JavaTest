@@ -27,9 +27,9 @@ public class MultiMBS extends Thread {
 		this.RE_RANGE = RE_END - RE_START;
 		this.IM_RANGE = IM_END - IM_START;
 	}
-	
+
 	public void initMultiMBS() {
-		
+
 	}
 
 	public void computeMBS(int process) {
@@ -41,7 +41,7 @@ public class MultiMBS extends Thread {
 		int[] col = { 0, 0, 0 };
 		double original_z_re = 0;
 		int index = 0;
-		
+
 		int range_x = Main.SCREEN_HEIGHT; // PROCESS_COUNT
 		int min_x = range_x * process;
 		int max_x = range_x * (process + 1);
@@ -81,7 +81,7 @@ public class MultiMBS extends Thread {
 					z_im = (2 * original_z_re * z_im) + c_im;
 				}
 				// Calculate the index in the 1D array
-				index = (int)(x * Main.SCREEN_HEIGHT + y);
+				index = (int) (x * Main.SCREEN_HEIGHT + y);
 				// Update the shared pixel values
 				pixels[index] = new Color(col[0], col[1], col[2]);
 			}
