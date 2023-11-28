@@ -39,7 +39,7 @@ public class Pane extends JPanel implements MouseListener {
 		m.computeNewRange();
 		repaint();
 	}
-
+//sdfsd
 	@Override
 	public void mousePressed(MouseEvent e) {
 	}
