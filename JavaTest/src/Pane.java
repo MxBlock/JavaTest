@@ -11,8 +11,8 @@ import javax.swing.Timer;
 @SuppressWarnings("serial")
 public class Pane extends JPanel implements MouseListener {
 	private MBS m = new MBS(-2, 1, -1, 1, 765, 0.5);
-	//private Fraktall m = new Fraktall(-2, 1, -1, 1, 1000, 0.5);
-	//private paintTest m = new paintTest();
+	// private Fraktall m = new Fraktall(-2, 1, -1, 1, 1000, 0.5);
+	// private paintTest m = new paintTest();
 
 	Pane() {
 		this.setPreferredSize(new Dimension(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT));
@@ -26,22 +26,28 @@ public class Pane extends JPanel implements MouseListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
-		
+
 		m.computeMBS();
-		//m.fillRandom();
+		// m.fillRandom();
 		paintCanvas(g2D, m.pixels);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(e.isShiftDown()) {
+		if (e.isShiftDown()) {
 			System.exit(0);
 		}
-		
+
 		m.mousePosPixel[0] = e.getX();
 		m.mousePosPixel[1] = e.getY();
-		System.out.println(m.mousePosPixel[0] + "\t" + m.mousePosPixel[1]);
-		m.computeNewRange();
+		m.mousePosGraph[0] = (m.RE_START + (((double) m.mousePosPixel[0] / (double) Main.SCREEN_WIDTH) * m.RE_RANGE));
+		m.mousePosGraph[1] = (m.IM_START + (((double) m.mousePosPixel[1] / (double) Main.SCREEN_HEIGHT) * m.IM_RANGE));
+		System.out.println(m.mousePosPixel[0] + "\t" + m.mousePosPixel[1] + "\t" + m.mousePosGraph[0] + "\t" + m.mousePosGraph[1]);
+		//m.computeNewRange();
+		//m.computeNewRange(m.G2P(-0.75, 0.1));
+		//m.computeNewRange(m.G2P(-1.0, -0.25));
+		//m.computeNewRange(m.G2P(-0.7325825989246367, -0.241147130727768));
+		m.computeNewRange(m.G2P(0, 0));
 		repaint();
 	}
 
@@ -76,9 +82,9 @@ public class Pane extends JPanel implements MouseListener {
 		int x = 0;
 		int y = 0;
 		for (int i = 0; i < (Main.SCREEN_LENGTH); i++) {
-			
+
 			x = i % Main.SCREEN_WIDTH;
-			if(x == 0) {
+			if (x == 0) {
 				y++;
 			}
 			g2D.setColor(pixels[i]);
