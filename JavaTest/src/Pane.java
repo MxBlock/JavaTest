@@ -5,21 +5,26 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class Pane extends JPanel implements MouseListener {
 	private MBS m = new MBS(-2, 1, -1, 1, 765, 0.5);
-	// private Fraktall m = new Fraktall(-2, 1, -1, 1, 1000, 0.5);
 	// private paintTest m = new paintTest();
 
 	Pane() {
+		JLabel label = new JLabel("(x|y)");
+		label.setForeground(Color.WHITE);
+		label.setLocation(Main.SCREEN_WIDTH/2, Main.SCREEN_HEIGHT/2);
 		this.setPreferredSize(new Dimension(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT));
 		this.setBackground(Color.BLACK);
 		this.setFocusable(true);
-		this.setLayout(null);
+		//this.setLayout(null);
 		this.addMouseListener(this);
+		this.add(label);
+		this.setVisible(true);
 	}
 
 	@Override
@@ -30,6 +35,8 @@ public class Pane extends JPanel implements MouseListener {
 		m.computeMBS();
 		// m.fillRandom();
 		paintCanvas(g2D, m.pixels);
+		paintGraph(g2D);
+		
 	}
 
 	@Override
@@ -42,12 +49,12 @@ public class Pane extends JPanel implements MouseListener {
 		m.mousePosPixel[1] = e.getY();
 		m.mousePosGraph[0] = (m.RE_START + (((double) m.mousePosPixel[0] / (double) Main.SCREEN_WIDTH) * m.RE_RANGE));
 		m.mousePosGraph[1] = (m.IM_START + (((double) m.mousePosPixel[1] / (double) Main.SCREEN_HEIGHT) * m.IM_RANGE));
-		System.out.println(m.mousePosPixel[0] + "\t" + m.mousePosPixel[1] + "\t" + m.mousePosGraph[0] + "\t" + m.mousePosGraph[1]);
-		//m.computeNewRange();
-		//m.computeNewRange(m.G2P(-0.75, 0.1));
-		//m.computeNewRange(m.G2P(-1.0, -0.25));
-		//m.computeNewRange(m.G2P(-0.7325825989246367, -0.241147130727768));
-		m.computeNewRange(m.G2P(0, 0));
+		System.out.println(
+				m.mousePosPixel[0] + "\t" + m.mousePosPixel[1] + "\t" + m.mousePosGraph[0] + "\t" + m.mousePosGraph[1]);
+		// m.computeNewRange();
+		// m.computeNewRange(m.G2P(-0.75, 0.1));
+		m.computeNewRange(m.G2P(-1.0, -0.25));
+		// m.computeNewRange(m.G2P(-0.7325825989246367, -0.241147130727768));
 		repaint();
 	}
 
@@ -90,5 +97,11 @@ public class Pane extends JPanel implements MouseListener {
 			g2D.setColor(pixels[i]);
 			g2D.drawLine(x, y, x, y);
 		}
+	}
+
+	public void paintGraph(Graphics2D g2D) {
+		g2D.setColor(Color.WHITE);
+		g2D.drawLine(Main.SCREEN_WIDTH / 2, 0, Main.SCREEN_WIDTH / 2, Main.SCREEN_HEIGHT);
+		g2D.drawLine(0, Main.SCREEN_HEIGHT / 2, Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT / 2);
 	}
 }

@@ -10,7 +10,7 @@ public class MBS {
 	double IM_RANGE;
 	int MAX_ITERATION;
 	double ZOOM_FACTOR;
-	double[] ZoomPos = {-1.0, -0.25};
+	double[] ZoomPos = { -1.0, -0.25 };
 
 	Color[] pixels = new Color[Main.SCREEN_LENGTH];
 	int[] mousePosPixel = { 0, 0 };
@@ -26,11 +26,12 @@ public class MBS {
 		this.RE_RANGE = RE_END - RE_START;
 		this.IM_RANGE = IM_END - IM_START;
 
-		// RE_END = RE_START + ((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) /Main.SCREEN_WIDTH);
+		// RE_END = RE_START + ((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2)
+		// /Main.SCREEN_WIDTH);
 		System.out.println((Main.SCREEN_WIDTH * ZOOM_FACTOR));
 		System.out.println(ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2);
-		System.out.println(((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) /Main.SCREEN_WIDTH));
-		System.out.println(RE_START + ((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) /Main.SCREEN_WIDTH));
+		System.out.println(((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH));
+		System.out.println(RE_START + ((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH));
 	}
 
 	public void computeNewRange() {
@@ -54,9 +55,12 @@ public class MBS {
 		// New middle of screen is mousePosScreen | convertP2G(mousePosition +
 		// HalfNewScreen)
 		RE_END = RE_START + ((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH) * RE_RANGE;
-		RE_START = RE_START + ((ZoomPos[0] - (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH) * RE_RANGE;
-		IM_END = IM_START + ((ZoomPos[1] + (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
-		IM_START = IM_START + ((ZoomPos[1] - (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
+		RE_START = RE_START
+				+ ((ZoomPos[0] - (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH) * RE_RANGE;
+		IM_END = IM_START
+				+ ((ZoomPos[1] + (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
+		IM_START = IM_START
+				+ ((ZoomPos[1] - (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT) * IM_RANGE;
 		// Compute new ranges
 		RE_RANGE = RE_END - RE_START;
 		IM_RANGE = IM_END - IM_START;
@@ -65,10 +69,21 @@ public class MBS {
 	public void computeNewRange(double[] ZoomPos) {
 		// New middle of screen is mousePosScreen | convertP2G(mousePosition +
 		// HalfNewScreen)
-		RE_END = RE_START + ((ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH);
-		RE_START = RE_START + ((ZoomPos[0] - (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2) / Main.SCREEN_WIDTH);
-		IM_END = IM_START + ((ZoomPos[1] + (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT);
-		IM_START = IM_START + ((ZoomPos[1] - (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2) / Main.SCREEN_HEIGHT);
+
+		// P2G = (RE_START + ((x / Main.SCREEN_HEIGHT) * RE_RANGE))
+
+		// New middle of screen is mousePosScreen | convertP2G(mousePosition +
+		// HalfNewScreen)
+		//RE_END = (ZoomPos[0] + (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2);
+		//RE_START = (ZoomPos[0] - (Main.SCREEN_WIDTH * ZOOM_FACTOR) / 2);
+		//IM_END = (ZoomPos[1] + (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2);
+		//IM_START = (ZoomPos[1] - (Main.SCREEN_HEIGHT * ZOOM_FACTOR) / 2);
+		
+		RE_END =
+		RE_START =
+		IM_END =
+		IM_START =
+		
 		// Compute new ranges
 		RE_RANGE = RE_END - RE_START;
 		IM_RANGE = IM_END - IM_START;
