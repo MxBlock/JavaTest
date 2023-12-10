@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.util.Random;
 
-public class MBS {
+public class MultiThreadMBS extends Thread{
 	double RE_START;
 	double RE_END;
 	double IM_START;
@@ -10,15 +10,15 @@ public class MBS {
 	double IM_RANGE;
 	int MAX_ITERATION;
 	double ZOOM_FACTOR;
+	int THREAD_COUNT;
 
 	Color[] pixels = new Color[Main.SCREEN_LENGTH];
 	double[] mousePosGraph = { 0, 0 };
 	int[] mousePosPixel = { 0, 0 };
-
 	double ZoomedScreenHalfWidth = 0;
 	double ZoomedScreenHalfHeight = 0;
 
-	public MBS(double RE_START, double RE_END, double IM_START, double IM_END, int MAX_ITERATION, double ZOOM_FACTOR) {
+	public MultiThreadMBS(double RE_START, double RE_END, double IM_START, double IM_END, int MAX_ITERATION, double ZOOM_FACTOR, int THREAD_COUNT) {
 		this.RE_START = RE_START;
 		this.RE_END = RE_END;
 		this.IM_START = IM_START;
@@ -27,6 +27,7 @@ public class MBS {
 		this.ZOOM_FACTOR = ZOOM_FACTOR;
 		this.RE_RANGE = RE_END - RE_START;
 		this.IM_RANGE = IM_END - IM_START;
+		this.THREAD_COUNT = THREAD_COUNT;
 	}
 
 	// Compute Zoomed in Values for Graph
@@ -43,6 +44,10 @@ public class MBS {
 	}
 
 	public void computeMBS() {
+		computeMbsPart(1);
+	}
+	
+	public void computeMbsPart(int process) {
 		double c_re = 0;
 		double c_im = 0;
 		double z_re = 0;
@@ -52,8 +57,12 @@ public class MBS {
 		double original_z_re = 0;
 		int x = 0;
 		int y = 0;
+		
+		int range = Main.SCREEN_HEIGHT; // PROCESS_COUNT
+		int min = range * process;
+		int max = range * (process + 1);
 
-		for (int i = 0; i < (Main.SCREEN_LENGTH); i++) {
+		for (int i = min; i < max; i++) {
 			x = i % Main.SCREEN_WIDTH;
 			if (x == 0) {
 				y++;

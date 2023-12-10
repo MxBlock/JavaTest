@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -11,32 +12,45 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class Pane extends JPanel implements MouseListener {
-	private MBS m = new MBS(-2, 1, -1, 1, 765, 0.5);
+	MBS m = new MBS(-2, 1, -1, 1, 765, 0.5);
+	//MultiThreadMBS m = new MultiThreadMBS(-2, 1, -1, 1, 765, 0.5,3);
 	// private paintTest m = new paintTest();
+	JLabel label;
+	double[] ZoomPos = { -1.03, -0.25 };
 
 	Pane() {
-		JLabel label = new JLabel("(x|y)");
+		label = new JLabel(m.RE_RANGE + "  |  " + m.IM_RANGE);
 		label.setForeground(Color.WHITE);
-		label.setLocation(Main.SCREEN_WIDTH/2, Main.SCREEN_HEIGHT/2);
+		// label.setLocation(Main.SCREEN_WIDTH/2, Main.SCREEN_HEIGHT/2);
 		this.setPreferredSize(new Dimension(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT));
 		this.setBackground(Color.BLACK);
 		this.setFocusable(true);
-		//this.setLayout(null);
+		// this.setLayout(null);
 		this.addMouseListener(this);
 		this.add(label);
 		this.setVisible(true);
+		m.computeMBS();
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
-
-		m.computeMBS();
-		// m.fillRandom();
+		Point p = getMousePosition();
+		if (p != null) {
+			m.mousePosPixel[0] = p.x;
+			m.mousePosPixel[1] = p.y;
+			m.mousePosGraph = m.PixelToGraph(m.mousePosPixel[0], m.mousePosPixel[1]);
+			label.setText(m.mousePosPixel[0] + "  |  " + (m.mousePosGraph[0]) + " -:- " + m.mousePosGraph[1] + "  |  " + m.mousePosPixel[1]);
+		}
 		paintCanvas(g2D, m.pixels);
-		paintGraph(g2D);
-		
+		//paintGraph(g2D);
+		try {
+			TimeUnit.MILLISECONDS.sleep(50);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		repaint();
 	}
 
 	@Override
@@ -44,17 +58,11 @@ public class Pane extends JPanel implements MouseListener {
 		if (e.isShiftDown()) {
 			System.exit(0);
 		}
-
-		m.mousePosPixel[0] = e.getX();
-		m.mousePosPixel[1] = e.getY();
-		m.mousePosGraph[0] = (m.RE_START + (((double) m.mousePosPixel[0] / (double) Main.SCREEN_WIDTH) * m.RE_RANGE));
-		m.mousePosGraph[1] = (m.IM_START + (((double) m.mousePosPixel[1] / (double) Main.SCREEN_HEIGHT) * m.IM_RANGE));
 		System.out.println(
-				m.mousePosPixel[0] + "\t" + m.mousePosPixel[1] + "\t" + m.mousePosGraph[0] + "\t" + m.mousePosGraph[1]);
-		// m.computeNewRange();
-		// m.computeNewRange(m.G2P(-0.75, 0.1));
-		m.computeNewRange(m.G2P(-1.0, -0.25));
-		// m.computeNewRange(m.G2P(-0.7325825989246367, -0.241147130727768));
+				m.RE_RANGE + "  |  " + (m.mousePosGraph[0]) + " -:- " + m.mousePosGraph[1] + "  |  " + m.IM_RANGE);
+		m.computeNewRange(m.mousePosGraph);
+		// m.computeNewRange(ZoomPos);
+		m.computeMBS();
 		repaint();
 	}
 
